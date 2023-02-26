@@ -115,6 +115,7 @@ namespace CourseWork16.View
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.SaleDevice_Button);
             this.Name = "SaleDeviceForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SaleDeviceForm";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);

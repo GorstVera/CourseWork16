@@ -14,8 +14,10 @@ namespace CourseWork16.ServiceUser
         SqlConnection connection = new SqlConnection();
         DataSet data1 = new DataSet();
         DataSet data2 = new DataSet();
+        DataSet data = new DataSet();
         SqlDataAdapter adapter1;
         SqlDataAdapter adapter2;
+        SqlDataAdapter adapter;
         DataGridView dataGridView;
         DataViewManager manager;
 
@@ -30,7 +32,6 @@ namespace CourseWork16.ServiceUser
         {
             string command1;
             string command2;
-            //command1 = "select Id, TypeName from TypeDevices; select Id, NameMaker from Makers; select Id, NameCountry from Countries;";
             command1 = "select * from TypeDevices; select * from Makers; select * from Countries;";
             adapter1 = new SqlDataAdapter(command1, connection);
             
@@ -58,6 +59,7 @@ namespace CourseWork16.ServiceUser
                     dataGridView.DataSource = data2.Tables[0];
                     break;
             }
+            connection.Close();
             manager = new DataViewManager(data1);
         }
 

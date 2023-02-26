@@ -32,12 +32,7 @@ namespace CourseWork16.ServiceDevice
         public async Task ChangeAmountSale(int id, int count)
         {
             AmountDevice temp = await _context.AmountDevices.FirstOrDefaultAsync(ad => ad.Id == id);
-            if(temp.Balance< count)
-            {
-                MessageBox.Show("Выбрано большое количество");
-                return;
-            }
-            temp.AmountSale -= count;
+            temp.AmountSale += count;
             temp.Balance -= count;
             await _context.SaveChangesAsync();
 
@@ -45,12 +40,7 @@ namespace CourseWork16.ServiceDevice
         public async Task ChangeAmountUnusable(int id, int count)
         {
             AmountDevice temp = await _context.AmountDevices.FirstOrDefaultAsync(ad => ad.Id == id);
-            if (temp.Balance < count)
-            {
-                MessageBox.Show("Выбрано большое количество");
-                return;
-            }
-            temp.Unusable -= count;
+            temp.Unusable += count;
             temp.Balance -= count;
             await _context.SaveChangesAsync();
 

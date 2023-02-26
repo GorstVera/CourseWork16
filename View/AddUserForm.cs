@@ -33,10 +33,16 @@ namespace CourseWork16.View
             }
 
             string role =  RadioCheck();
-            await userService.AddUser(textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text, role);
+            var user = await userService.AddUser(textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text, role);
 
-            this.DialogResult = DialogResult.OK;
-            
+            if (user != null)
+            {
+                label5.Text = "Пользователь успешно добавлен";
+            }
+            else
+            {
+                label5.Text = "Пользователь не добавлен";
+            }  
         }
         private  string RadioCheck()
         {

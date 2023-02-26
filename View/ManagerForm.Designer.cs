@@ -571,7 +571,7 @@ namespace CourseWork16.View
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1381, 771);
+            this.ClientSize = new System.Drawing.Size(1404, 771);
             this.Controls.Add(this.ShowType_Button);
             this.Controls.Add(this.comboBox8);
             this.Controls.Add(this.label9);

@@ -36,12 +36,14 @@ namespace CourseWork16.View
             this.SaleDevice_Button = new System.Windows.Forms.Button();
             this.AddUser_Button = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.label1 = new System.Windows.Forms.Label();
+            this.All_Users_Button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // AddNewDevice_Button
             // 
-            this.AddNewDevice_Button.Location = new System.Drawing.Point(129, 456);
+            this.AddNewDevice_Button.Location = new System.Drawing.Point(127, 497);
             this.AddNewDevice_Button.Name = "AddNewDevice_Button";
             this.AddNewDevice_Button.Size = new System.Drawing.Size(242, 85);
             this.AddNewDevice_Button.TabIndex = 0;
@@ -71,9 +73,9 @@ namespace CourseWork16.View
             // 
             // Edit_Button
             // 
-            this.Edit_Button.Location = new System.Drawing.Point(243, 631);
+            this.Edit_Button.Location = new System.Drawing.Point(788, 496);
             this.Edit_Button.Name = "Edit_Button";
-            this.Edit_Button.Size = new System.Drawing.Size(150, 40);
+            this.Edit_Button.Size = new System.Drawing.Size(241, 85);
             this.Edit_Button.TabIndex = 6;
             this.Edit_Button.Text = "Редактирование";
             this.Edit_Button.UseVisualStyleBackColor = true;
@@ -81,7 +83,7 @@ namespace CourseWork16.View
             // 
             // SaleDevice_Button
             // 
-            this.SaleDevice_Button.Location = new System.Drawing.Point(462, 455);
+            this.SaleDevice_Button.Location = new System.Drawing.Point(459, 496);
             this.SaleDevice_Button.Name = "SaleDevice_Button";
             this.SaleDevice_Button.Size = new System.Drawing.Size(251, 86);
             this.SaleDevice_Button.TabIndex = 7;
@@ -108,11 +110,31 @@ namespace CourseWork16.View
             this.dataGridView1.Size = new System.Drawing.Size(1290, 313);
             this.dataGridView1.TabIndex = 9;
             // 
+            // label1
+            // 
+            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label1.Location = new System.Drawing.Point(53, 463);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(1245, 23);
+            this.label1.TabIndex = 10;
+            // 
+            // All_Users_Button
+            // 
+            this.All_Users_Button.Location = new System.Drawing.Point(1128, 26);
+            this.All_Users_Button.Name = "All_Users_Button";
+            this.All_Users_Button.Size = new System.Drawing.Size(169, 83);
+            this.All_Users_Button.TabIndex = 11;
+            this.All_Users_Button.Text = "Все пользователи";
+            this.All_Users_Button.UseVisualStyleBackColor = true;
+            this.All_Users_Button.Click += new System.EventHandler(this.All_Users_Button_Click);
+            // 
             // AdminForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1342, 693);
+            this.Controls.Add(this.All_Users_Button);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.AddUser_Button);
             this.Controls.Add(this.SaleDevice_Button);
@@ -136,5 +158,7 @@ namespace CourseWork16.View
         private System.Windows.Forms.Button SaleDevice_Button;
         private System.Windows.Forms.Button AddUser_Button;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button All_Users_Button;
     }
 }

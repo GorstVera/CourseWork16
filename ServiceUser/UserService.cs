@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CourseWork16.ServiceUser
 {
@@ -15,7 +16,6 @@ namespace CourseWork16.ServiceUser
         public UserService()
         {
             _context = new AppDbContext();
-            //_encrypt = encrypt;
         }
         public async Task<User> AddUser(string lastName, string name, string login, string password, string role)
         {
@@ -61,6 +61,39 @@ namespace CourseWork16.ServiceUser
         public async Task<User> GetUser(string login)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Login == login);
+        }
+        public async Task<User> GetUser(int id)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<List<User>> ShowAllUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+        public async Task<bool> RemoveUser(int id)
+        {
+            var user = await GetUser(id);
+            if (user == null)
+            {
+                MessageBox.Show("Удаление не возможно");
+            }
+            else
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+            user = await GetUser(id);
+            if (user == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
+
         }
     }
 }

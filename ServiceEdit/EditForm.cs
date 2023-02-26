@@ -21,30 +21,37 @@ namespace CourseWork16.View
         {
             InitializeComponent();
             editService = new EditService(dataGridView1);
-            this.Load += EditForm_Load;
             dataGridView1.CellDoubleClick += DataGridView1_CellDoubleClick;
         }
 
         private void DataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            string id =dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
-            int tempId = 0;
-            Int32.TryParse(id, out tempId);
-            editAmountForm = new EditAmountForm(tempId);
-            if(editAmountForm.ShowDialog() == DialogResult.OK)
+            if(comboBox1.Text == "Продукция")
             {
-                editService.FillTables(3);
+                string id = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
+                int tempId = 0;
+                bool res = Int32.TryParse(id, out tempId);
+                if (res == false)
+                {
+                    MessageBox.Show("Ошибка!");
+                }
+                editAmountForm = new EditAmountForm(tempId);
+                if (editAmountForm.ShowDialog() == DialogResult.OK)
+                {
+                    editService.FillTables(3);
+                }
             }
             
-        }
-
-        private void EditForm_Load(object sender, EventArgs e)
-        {
-           
+            
         }
 
         private void Choice_Button_Click(object sender, EventArgs e)
         {
+            if (comboBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("Выберита данные");
+                return;
+            }
             editService.FillTables(comboBox1.SelectedIndex);
         }
 

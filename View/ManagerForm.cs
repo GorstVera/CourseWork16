@@ -23,7 +23,7 @@ namespace CourseWork16.View
         {
             InitializeComponent();
             this.Load += ManagerForm_Load;
-            
+            dataGridView1.AutoResizeColumns();
         }
 
         private async void ManagerForm_Load(object sender, EventArgs e)
@@ -47,40 +47,48 @@ namespace CourseWork16.View
                 comboBox6.Items.Add(item);
                 comboBox7.Items.Add(item);
             }
-            comboBox3.SelectedIndex = 0;
             foreach (Country item in await countryService.GetAll())
             {
                 comboBox5.Items.Add(item);
             }
-            //deviceService.ShowAll(dataGridView1);
-            //dataGridView1.Sort(dataGridView1.Columns[1], ListSortDirection.Ascending);
+            
         }
 
-        private void AllDevices_Button_Click(object sender, EventArgs e)
+        private async void AllDevices_Button_Click(object sender, EventArgs e)
         {
-            deviceService.ShowAll(dataGridView1);
+           await deviceService.ShowAll(dataGridView1);
         }
 
         private async void ShowType_Button_Click(object sender, EventArgs e)
         {
+            if (comboBox8.SelectedIndex == -1)
+            {
+                MessageBox.Show("Выберите категорию");
+                return;
+            }
             int res = await typeService.GetIdTypeDevice(comboBox8.Text);
-            deviceService.ShowType(dataGridView1, res);
+            await deviceService.ShowType(dataGridView1, res);
         }
 
         private async void FindMaker_Button_Click(object sender, EventArgs e)
         {
+            if (comboBox2.SelectedIndex == -1)
+            {
+                MessageBox.Show("Выберите производителя");
+                return;
+            }
             int resM = await makerService.GetIdMaker(comboBox2.Text);
             deviceService.ShowMaker(dataGridView1, resM);
         }
 
-        private void FindRelease_Button_Click(object sender, EventArgs e)
+        private async void FindRelease_Button_Click(object sender, EventArgs e)
         {
-            deviceService.ShowDate(dataGridView1, dateTimePicker1.Value);
+             await deviceService.ShowDate(dataGridView1, dateTimePicker1.Value);
         }
 
-        private void FindPrice_Button_Click(object sender, EventArgs e)
+        private async void FindPrice_Button_Click(object sender, EventArgs e)
         {
-            deviceService.PriceBetween(dataGridView1, numericUpDown1.Value, numericUpDown2.Value);
+            await deviceService.PriceBetween(dataGridView1, numericUpDown1.Value, numericUpDown2.Value);
         }
 
         private async void FindWeight_Button_Click(object sender, EventArgs e)
@@ -97,18 +105,19 @@ namespace CourseWork16.View
             deviceService.WeightBetween(dataGridView1, tempM, (float)numericUpDown3.Value, (float)numericUpDown4.Value);
         }
 
-        private void FindPeriod_Button_Click(object sender, EventArgs e)
+        private async void FindPeriod_Button_Click(object sender, EventArgs e)
         {
             float res = 0;
-            int part = deviceService.PartSaleDevice(dateTimePicker2.Value);
-            int all = deviceService.PartSaleDevice(DateTime.Now);
+            int all = await deviceService.PartSaleDevice(dataGridView1, DateTime.Now);
+            int part = await deviceService.PartSaleDevice(dataGridView1, dateTimePicker2.Value);
             res = part *100/ all;
 
-            label9.Text = $"Доля проданных товаров на дату: {dateTimePicker2.Value} составляет {res}%";
+            label9.Text = $"Доля реализованных товаров на дату: {dateTimePicker2.Value.ToShortDateString()} составляет {res}%";
         }
-        private void Expensive_Button_Click(object sender, EventArgs e)
+        private async void Expensive_Button_Click(object sender, EventArgs e)
         {
-            deviceService.ExpenciveDevice(dataGridView1, comboBox1.Text);
+           
+            await deviceService.ExpenciveDevice(dataGridView1, comboBox1.Text);
         }
 
         private void Cheapest_Button_Click(object sender, EventArgs e)
@@ -139,30 +148,61 @@ namespace CourseWork16.View
 
         private async void PriceLessThan_Button_Click(object sender, EventArgs e)
         {
-            float res = await deviceService.PartPriceDevice(dataGridView1, comboBox4.SelectedIndex, numericUpDown5.Value);
-            label9.Text = $"Доля товаров со стоимостью меньше {numericUpDown5.Value} в категории {comboBox4.Text} составляет {res} % ";
+            float res = 0;
+            if (comboBox4.SelectedIndex ==0)
+            {
+                res = await deviceService.PartPriceDevice(dataGridView1, comboBox4.SelectedIndex, numericUpDown5.Value);
+                label9.Text = $"Доля товаров со стоимостью меньше {numericUpDown5.Value} в категории {comboBox4.Text} составляет {res} % ";
+            }
+            else
+            {
+                int id = await makerService.GetIdMaker(comboBox4.Text);
+                res = await deviceService.PartPriceDevice(dataGridView1, id, numericUpDown5.Value);
+                label9.Text = $"Доля товаров со стоимостью меньше {numericUpDown5.Value} в категории {comboBox4.Text} составляет {res} % ";
+            }
+            
         }
 
         private async void FindOperable_Button_Click(object sender, EventArgs e)
         {
             int id = 0;
+            if (radioButton1.Checked==false && radioButton2.Checked == false)
+            {
+                MessageBox.Show("Выберите вариант отбора");
+                return;
+            }
             if (radioButton1.Checked)
             {
+                if (comboBox5.SelectedIndex==-1)
+                {
+                    MessageBox.Show("Выберите страну");
+                    return;
+                }
                 id = await countryService.GetIdCountry(comboBox5.Text);
-                int res = await deviceService.AmountUnusableDeviceCountry(dataGridView1, id);
+                int res = await  deviceService.AmountUnusableDeviceCountry(dataGridView1, id);
                 label9.Text = $"Количество бракованных изделий из {comboBox5.Text} составляет {res} штук";
             }
             else
             {
-                id = await makerService.GetIdMaker(comboBox5.Text);
+                if (comboBox6.SelectedIndex == -1)
+                {
+                    MessageBox.Show("Выберите производителя");
+                    return;
+                }
+                id = await makerService.GetIdMaker(comboBox6.Text);
                 int res = await deviceService.AmountUnusableDeviceMaker(dataGridView1, id);
-                label9.Text = $"Количество бракованных изделий от {comboBox5.Text} составляет {res} штук";
+                label9.Text = $"Количество бракованных изделий от {comboBox6.Text} составляет {res} штук";
             }
             
         }
 
         private async void FindAvarageThen_Button_Click(object sender, EventArgs e)
         {
+            if (comboBox7.SelectedIndex ==-1)
+            {
+                MessageBox.Show("Выберите производителя");
+                return;
+            }
             int id = await makerService.GetIdMaker(comboBox7.Text);
             decimal res = await deviceService.HiAverageMaker(dataGridView1, id);
             label9.Text = $"Средняя стоимость товаров производителя: {comboBox7.Text} составляет {res} рублей.";

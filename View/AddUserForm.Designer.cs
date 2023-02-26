@@ -39,8 +39,9 @@ namespace CourseWork16.View
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.AddNewUser_Button = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.label5 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -110,7 +111,7 @@ namespace CourseWork16.View
             // 
             // AddNewUser_Button
             // 
-            this.AddNewUser_Button.Location = new System.Drawing.Point(208, 315);
+            this.AddNewUser_Button.Location = new System.Drawing.Point(220, 275);
             this.AddNewUser_Button.Name = "AddNewUser_Button";
             this.AddNewUser_Button.Size = new System.Drawing.Size(174, 64);
             this.AddNewUser_Button.TabIndex = 8;
@@ -128,17 +129,6 @@ namespace CourseWork16.View
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(18, 27);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(104, 17);
-            this.radioButton1.TabIndex = 0;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Администратор";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            // 
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
@@ -150,11 +140,31 @@ namespace CourseWork16.View
             this.radioButton2.Text = "Менеджер";
             this.radioButton2.UseVisualStyleBackColor = true;
             // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(18, 27);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(104, 17);
+            this.radioButton1.TabIndex = 0;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "Администратор";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label5.Location = new System.Drawing.Point(50, 368);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(332, 23);
+            this.label5.TabIndex = 10;
+            // 
             // AddUserForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(406, 402);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.AddNewUser_Button);
             this.Controls.Add(this.textBox4);
@@ -166,6 +176,7 @@ namespace CourseWork16.View
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "AddUserForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AddUserForm";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -188,5 +199,6 @@ namespace CourseWork16.View
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.Label label5;
     }
 }

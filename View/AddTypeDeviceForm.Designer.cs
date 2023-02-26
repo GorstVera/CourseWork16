@@ -58,6 +58,7 @@ namespace CourseWork16.View
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button1);
             this.Name = "AddTypeDeviceForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AddTypeDeviceForm";
             this.ResumeLayout(false);
             this.PerformLayout();

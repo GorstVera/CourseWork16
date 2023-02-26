@@ -28,6 +28,8 @@ namespace CourseWork16.View
         private async void SaleDeviceForm_Load(object sender, EventArgs e)
         {
             AmountDevice ad = await amountDeviceService.GetAmountDevice(id);
+            Device device = await deviceService.GetDevice(id);
+            label3.Text += "Дата поступления: " + device.Date_release.ToShortDateString() + Environment.NewLine;
             label3.Text += "Поступление: " + ad.AmountBye + Environment.NewLine;
             label3.Text += "Продажи: " + ad.AmountSale + Environment.NewLine;
             label3.Text += "Брак: " + ad.Unusable + Environment.NewLine;
@@ -36,9 +38,12 @@ namespace CourseWork16.View
 
         private async void SaleDevice_Button_Click(object sender, EventArgs e)
         {
-            if(numericUpDown1.Value==0)
+            AmountDevice ad = await amountDeviceService.GetAmountDevice(id);
+            Device device = await deviceService.GetDevice(id);
+            if (numericUpDown1.Value<=0)
             {
                 MessageBox.Show("Выберите количество");
+                return;
             }
 
             if(!radioButton1.Checked && !radioButton2.Checked)
@@ -46,22 +51,31 @@ namespace CourseWork16.View
                 MessageBox.Show("Выберите вариант выбытия");
                 return;
             }
-            else
+            if (ad.Balance < (int)numericUpDown1.Value)
             {
-                if(radioButton1.Checked)
-                {
-                    await amountDeviceService.ChangeAmountSale(id, (int)numericUpDown1.Value);
-                    await deviceService.SetDateSale(id, dateTimePicker1.Value);
-                }
-                else
-                {
-                    await amountDeviceService.ChangeAmountUnusable(id, (int)numericUpDown1.Value);
-                    await deviceService.SetDateSale(id, dateTimePicker1.Value);
-                }
+                MessageBox.Show("Выбрано большое количество");
+                return;
             }
+            if (device.Date_release> dateTimePicker1.Value)
+            {
+                MessageBox.Show("Неверно выбрана дата");
+                return;
+            }
+            
+            
+             if(radioButton1.Checked)
+             {
+
+                 await amountDeviceService.ChangeAmountSale(id, (int)numericUpDown1.Value);
+                 await deviceService.SetDateSale(id, dateTimePicker1.Value);
+             }
+             else
+             {
+                 await amountDeviceService.ChangeAmountUnusable(id, (int)numericUpDown1.Value);
+                 await deviceService.SetDateSale(id, dateTimePicker1.Value);
+             }
 
             this.DialogResult = DialogResult.OK;
-
         }
     }
 }

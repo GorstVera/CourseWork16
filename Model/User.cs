@@ -20,5 +20,10 @@ namespace CourseWork16.ServiceUser
         public string Password { get; set; }
         public string Salt { get; set; }
         public UserRole Role { get; set; }
+
+        public override string ToString()
+        {
+            return $"Имя: {Name} Фамилия: {LastName} Доступ: {Role}";
+        }
     }
 }

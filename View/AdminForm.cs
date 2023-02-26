@@ -14,71 +14,58 @@ namespace CourseWork16.View
 {
     public partial class AdminForm : Form
     {
-        AddNewDeviceForm AddNewDeviceForm;
-        AddUserForm addUserForm;
+        AddUserForm addUserForm = new AddUserForm();
         DeviceService deviceService = new DeviceService();
         TypeService typeService = new TypeService();
         AmountDeviceService amountDeviceService = new AmountDeviceService();
         SaleDeviceForm saleDeviceForm;
         EditForm editForm = new EditForm();
+        AllUsersForm allUsers = new AllUsersForm();
+        AddNewDeviceForm AddNewDeviceForm = new AddNewDeviceForm();
         public AdminForm()
         {
             InitializeComponent();
             this.Load += AdminForm_Load;
             this.dataGridView1.CellDoubleClick += DataGridView1_CellDoubleClick;
-
-            
-            
-
         }
 
         private void DataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridView1.CurrentCell.ColumnIndex == 1)
             {
-                deviceService.Show(dataGridView1);
+                deviceService.ShowAll(dataGridView1);
             }
             if (dataGridView1.CurrentCell.ColumnIndex == 2)
             {
-                deviceService.Show(dataGridView1);
+                deviceService.ShowAll(dataGridView1);
             }
             if (dataGridView1.CurrentCell.ColumnIndex == 3)
             {
-                deviceService.Show(dataGridView1);
+                deviceService.ShowAll(dataGridView1);
             }
         }
 
         private void AdminForm_Load(object sender, EventArgs e)
         {
+            deviceService.ShowAll(dataGridView1);    
+        }
+        private void ShowAll_Button_Click(object sender, EventArgs e)
+        {
             deviceService.ShowAll(dataGridView1);
-            
         }
 
         private void AddNewDevice_Button_Click(object sender, EventArgs e)
         {
-            AddNewDeviceForm = new AddNewDeviceForm();
-            if(AddNewDeviceForm.ShowDialog() == DialogResult.OK)
-            {
-               // dataGridView1.Update();
-               // dataGridView1.Refresh();
-                deviceService.ShowAll(dataGridView1);
-            }
+            AddNewDeviceForm.ShowDialog();
         }
 
         private void AddUser_Button_Click(object sender, EventArgs e)
         {
-            addUserForm = new AddUserForm();
-            
-            if(addUserForm.ShowDialog() == DialogResult.OK)
-            {
-
-            }
+            addUserForm.ShowDialog();
         }
-
-        private void ShowAll_Button_Click(object sender, EventArgs e)
+        private void All_Users_Button_Click(object sender, EventArgs e)
         {
-            deviceService.Show(dataGridView1);
-
+            allUsers.ShowDialog();
         }
 
         private void SaleDevice_Button_Click(object sender, EventArgs e)
@@ -89,11 +76,14 @@ namespace CourseWork16.View
                 return;
             }
 
-            var res = dataGridView1.SelectedCells[0].Value;
-            int tempId = Convert.ToInt32(res);
+            string id = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
+            int tempId = 0;
+            Int32.TryParse(id, out tempId);
+            MessageBox.Show(tempId.ToString());
             saleDeviceForm = new SaleDeviceForm(tempId);
             if (saleDeviceForm.ShowDialog() == DialogResult.OK)
             {
+                label1.Text = "Товар успешно реализован";
                 deviceService.ShowAll(dataGridView1);
             }
 
@@ -106,33 +96,37 @@ namespace CourseWork16.View
                 MessageBox.Show("Выберите предмет");
                 return;
             }
+            string id = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
+            int tempId = 0;
+            bool res1, res2 = false;
+            Int32.TryParse(id, out tempId);
 
-            var res = dataGridView1.SelectedCells[0].Value;
-            int tempId = Convert.ToInt32(res);
-            bool res1 = await amountDeviceService.RemoveAmountDevice(tempId);
+           
+            res1 = await amountDeviceService.RemoveAmountDevice(tempId);
             if(res1 == true)
             {
-                bool res2 = await deviceService.RemoveDevice(tempId);
+                res2 = await deviceService.RemoveDevice(tempId);
             }
-            /*
+            
             if (res1 == true && res2 == true)
             {
-                MessageBox.Show("Удаление выполнено");
+                label1.Text = "Удаление выполнено успешно";
+                deviceService.ShowAll(dataGridView1);
             }
             else
             {
-                MessageBox.Show("Не удалось удалить объект");
-            }
-            */
-            
+                label1.Text = "Не удалось удалить объект";
+            }          
         }
 
         private void Edit_Button_Click(object sender, EventArgs e)
         {
             if (editForm.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show("редактирование выполнено успешно");
+                MessageBox.Show("Редактирование выполнено успешно");
             }
         }
+
+       
     }
 }

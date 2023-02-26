@@ -42,10 +42,10 @@ namespace CourseWork16.View
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.AddNewDevice_Button = new System.Windows.Forms.Button();
-            this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.button1 = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
@@ -161,21 +161,13 @@ namespace CourseWork16.View
             // 
             // AddNewDevice_Button
             // 
-            this.AddNewDevice_Button.Location = new System.Drawing.Point(348, 493);
+            this.AddNewDevice_Button.Location = new System.Drawing.Point(348, 436);
             this.AddNewDevice_Button.Name = "AddNewDevice_Button";
             this.AddNewDevice_Button.Size = new System.Drawing.Size(147, 64);
             this.AddNewDevice_Button.TabIndex = 13;
             this.AddNewDevice_Button.Text = "Добавить";
             this.AddNewDevice_Button.UseVisualStyleBackColor = true;
             this.AddNewDevice_Button.Click += new System.EventHandler(this.AddNewDevice_Button_Click);
-            // 
-            // label7
-            // 
-            this.label7.Location = new System.Drawing.Point(26, 534);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(253, 23);
-            this.label7.TabIndex = 14;
-            this.label7.Text = "label7";
             // 
             // label8
             // 
@@ -203,15 +195,23 @@ namespace CourseWork16.View
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // label7
+            // 
+            this.label7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.label7.Location = new System.Drawing.Point(65, 532);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(400, 23);
+            this.label7.TabIndex = 18;
+            // 
             // AddNewDeviceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(507, 583);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
             this.Controls.Add(this.AddNewDevice_Button);
             this.Controls.Add(this.numericUpDown3);
             this.Controls.Add(this.numericUpDown2);
@@ -226,6 +226,7 @@ namespace CourseWork16.View
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "AddNewDeviceForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "AddNewDeviceForm";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
@@ -250,9 +251,9 @@ namespace CourseWork16.View
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.NumericUpDown numericUpDown3;
         private System.Windows.Forms.Button AddNewDevice_Button;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label7;
     }
 }

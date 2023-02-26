@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,18 +75,20 @@ namespace CourseWork16.ServiceDevice
 
         public async Task<Device> GetDevice(int id)
         {
-            Device res = await _context.Devices.Include("AmountDevice").FirstOrDefaultAsync(d => d.Id == id);
+            Device res = await _context.Devices.FirstOrDefaultAsync(d => d.Id == id);
             return res;
         }
 
         public async Task<bool> RemoveDevice(int id)
         {
             //Device device = await _context.Devices.FirstOrDefaultAsync(d => d.Id == id);
+
+
             Device device = await GetDevice(id);
             _context.Devices.Remove(device);
             await _context.SaveChangesAsync();
-            device = await _context.Devices.FirstOrDefaultAsync(d => d.Id == id);
-            if (device == null)
+            var res = await _context.Devices.FirstOrDefaultAsync(d => d.Id == id);
+            if (res == null)
             {
                 return true;
             }
@@ -96,13 +99,13 @@ namespace CourseWork16.ServiceDevice
         }
         public async Task SetDateSale(int id, DateTime date)
         {
-            Device tempD = await _context.Devices.FirstOrDefaultAsync(d => d.Id == id); ;
+            Device tempD = await _context.Devices.FirstOrDefaultAsync(d => d.Id == id); 
             tempD.Date_sale = date;
             await _context.SaveChangesAsync();
         }
 
 
-        public async void ShowAll(DataGridView gridView)
+        public async Task ShowAll(DataGridView gridView)
         {
 
 
@@ -111,51 +114,38 @@ namespace CourseWork16.ServiceDevice
 
                       select new
                       {
-                          d.Id,
-                          d.TypeDevice,
-                          d.Maker,
-                          d.Country,
-                          d.Price,
-                          d.Weight,
-                          d.Date_release,
-                          d.Date_sale,
-                          ad.AmountBye,
-                          ad.AmountSale,
-                          ad.Unusable,
-                          ad.Balance
+                          d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                          d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
                       };
 
             gridView.DataSource = await res.ToListAsync();
 
         }
 
-        public async void Show(DataGridView gridView)
+        public void Show(DataGridView gridView)
         {
+            SqlConnection connection = new SqlConnection();
+            DataSet data = new DataSet();
+            SqlDataAdapter adapter;
+            DataViewManager manager;
+            connection.ConnectionString = @"Data Source=1-ПК\SQLEXPRESS; Initial catalog = CourseWork16; Integrated Security = true;";
+            connection.Open();
+            string command;
 
-            var res = (from d in _context.Devices
-                       join ad in _context.AmountDevices on d.Id equals ad.Id
+            command = "select Devices.Id, TypeDevices.NameType, Makers.NameMaker, Countries.NameCountry, Devices.Price, Devices.Date_release, Devices.Date_sale, Devices.Weight, AmountDevices.AmountBye, AmountDevices.AmountSale,AmountDevices.Unusable, AmountDevices.Balance  from Devices inner join TypeDevices on Devices.TypeDeviceId = TypeDevices.Id inner join Makers on Devices.MakerId = Makers.Id inner join Countries on Devices.CountryId = Countries.Id inner join AmountDevices on Devices.Id = AmountDevices.Id;";
+            adapter = new SqlDataAdapter(command, connection);
 
-                       select new
-                       {
-                           d.Id,
-                           d.TypeDevice,
-                           d.Maker,
-                           d.Country,
-                           d.Price,
-                           d.Weight,
-                           d.Date_release,
-                           d.Date_sale,
-                           ad.AmountBye,
-                           ad.AmountSale,
-                           ad.Unusable,
-                           ad.Balance
-                       }).ToListAsync();
+            data.Tables.Clear();
+            adapter.Fill(data);
 
-            gridView.DataSource = await res;
+            gridView.DataSource = data.Tables[0];
+                  
+            connection.Close();
+            manager = new DataViewManager(data);
 
         }
 
-        public async void ShowType(DataGridView gridView, int id)
+        public async Task ShowType(DataGridView gridView, int id)
         {
 
             var res = from d in _context.Devices
@@ -163,23 +153,13 @@ namespace CourseWork16.ServiceDevice
                       where d.TypeDeviceId == id
                       select new
                       {
-                          d.Id,
-                          d.TypeDevice,
-                          d.Maker,
-                          d.Country,
-                          d.Price,
-                          d.Weight,
-                          d.Date_release,
-                          d.Date_sale,
-                          ad.AmountBye,
-                          ad.AmountSale,
-                          ad.Unusable,
-                          ad.Balance
+                          d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                          d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
                       };
 
             gridView.DataSource = await res.ToListAsync();
         }
-        public async void ShowMaker(DataGridView gridView, int id)
+        public async Task ShowMaker(DataGridView gridView, int id)
         {
             var res = from d in _context.Devices
                       join ad in _context.AmountDevices on d.Id equals ad.Id
@@ -202,7 +182,7 @@ namespace CourseWork16.ServiceDevice
 
             gridView.DataSource = await res.ToListAsync();
         }
-        public async void ShowDate(DataGridView gridView, DateTime dateTime)
+        public async Task ShowDate(DataGridView gridView, DateTime dateTime)
         {
             var res = from d in _context.Devices
                       join ad in _context.AmountDevices on d.Id equals ad.Id
@@ -225,7 +205,7 @@ namespace CourseWork16.ServiceDevice
 
             gridView.DataSource = await res.ToListAsync();
         }
-        public async void PriceBetween(DataGridView gridView, decimal one, decimal two)
+        public async Task PriceBetween(DataGridView gridView, decimal one, decimal two)
         {
             var res = (from d in _context.Devices
                        join ad in _context.AmountDevices on d.Id equals ad.Id
@@ -299,16 +279,50 @@ namespace CourseWork16.ServiceDevice
             }
 
         }
-        public int PartSaleDevice(DateTime date)
+        public async Task<int> PartSaleDevice(DataGridView gridView, DateTime date)
         {
-            var res = (from d in _context.Devices
+            int  count = (from d in _context.Devices
                        join ad in _context.AmountDevices on d.Id equals ad.Id
-                       where d.Date_sale <= date
-                       select ad.AmountSale).Sum();
-            return res;
-        }
+                       where d.Date_sale.Value.Day <= date.Day
+                       select new
+                       {
+                           d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release, d.Date_sale,
+                           ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                       }).Count();
+            if (count > 0)
+            {
+                var res1 = from d in _context.Devices
+                           join ad in _context.AmountDevices on d.Id equals ad.Id
+                           where d.Date_sale.Value.Day <= date.Day
+                           select new
+                           {
+                               d.Id,
+                               d.TypeDevice,
+                               d.Maker,
+                               d.Country,
+                               d.Price,
+                               d.Weight,
+                               d.Date_release,
+                               d.Date_sale,
+                               ad.AmountBye,
+                               ad.AmountSale,
+                               ad.Unusable,
+                               ad.Balance
+                           };
+                gridView.DataSource = await res1.ToListAsync();
 
-        public async void ExpenciveDevice(DataGridView gridView, string choice)
+                var res = (from d in _context.Devices
+                           join ad in _context.AmountDevices on d.Id equals ad.Id
+                           where d.Date_sale.Value.Day <= date.Day
+                           select ad.AmountSale).Sum();
+                return res;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        public async Task ExpenciveDevice(DataGridView gridView, string choice)
         {
             string temp = choice;
             decimal maxPrice;
@@ -340,8 +354,7 @@ namespace CourseWork16.ServiceDevice
                 gridView.DataSource = await res.ToListAsync();
             }
         }
-
-        public async void CheapDevice(DataGridView gridView, string choice)
+        public async Task CheapDevice(DataGridView gridView, string choice) 
         {
             string temp = choice;
             decimal minPrice;
@@ -405,138 +418,197 @@ namespace CourseWork16.ServiceDevice
         {
             int countDevice = 0;
             int countDeviceAll = 0;
-            countDeviceAll = (from d in _context.Devices
+            int AllDevice = 0;
+            AllDevice = (from d in _context.Devices
+                         join ad in _context.AmountDevices on d.Id equals ad.Id
+                         select new
+                         {
+                              d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                              d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                         }).Count();
+            if (AllDevice == 0) return 0;
+            else
+            {
+
+
+                countDeviceAll = (from d in _context.Devices
+                                  join ad in _context.AmountDevices on d.Id equals ad.Id
+                                  select new
+                                  {
+                                      d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                                      d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                                  }).Sum(ad => ad.AmountBye);
+
+                if (id == 0)
+                {
+
+                    var res = from d in _context.Devices
                               join ad in _context.AmountDevices on d.Id equals ad.Id
+                              where d.Price < price
                               select new
                               {
                                   d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
                                   d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
-                              }).Sum(ad => ad.AmountBye);
-            if (id == 0)
-            {
-                
-                var res = from d in _context.Devices
-                          join ad in _context.AmountDevices on d.Id equals ad.Id
-                          where d.Price < price
-                          select new
-                          {
-                              d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release, 
-                              d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
-                          };
-                countDevice = (from d in _context.Devices
-                           join ad in _context.AmountDevices on d.Id equals ad.Id
-                           where d.Price < price
-                           select new
-                           {
-                               d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
-                               d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
-                           }).Sum(ad=> ad.AmountBye);
+                              };
+                    countDevice = (from d in _context.Devices
+                                   join ad in _context.AmountDevices on d.Id equals ad.Id
+                                   where d.Price < price
+                                   select new
+                                   {
+                                       d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                                       d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                                   }).Sum(ad => ad.AmountBye);
 
-                
-                gridView.DataSource = await res.ToListAsync();
 
-                float part = countDevice * 100 / countDeviceAll;
-                return part;
+                    gridView.DataSource = await res.ToListAsync();
+                    float part = countDevice * 100 / countDeviceAll;
+                    return part;
+                }
+                else
+                {
+                    var res = from d in _context.Devices
+                              join ad in _context.AmountDevices on d.Id equals ad.Id
+                              where (d.Price < price && d.MakerId == id)
+                              select new
+                              {
+                                  d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                                  d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                              };
+                    countDevice = (from d in _context.Devices
+                                   join ad in _context.AmountDevices on d.Id equals ad.Id
+                                   where (d.Price < price && d.MakerId == id)
+                                   select new
+                                   {
+                                       d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release, 
+                                       d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                                   }).Sum(ad => ad.AmountBye);
+
+                    gridView.DataSource = await res.ToListAsync();
+
+                    float part = countDevice * 100 / countDeviceAll;
+                    return part;
+                }
             }
-            else
+        }
+
+        public async Task<int> AmountUnusableDeviceCountry (DataGridView gridView, int id)
+        {
+
+            int countDevice = (from d in _context.Devices
+                               join ad in _context.AmountDevices on d.Id equals ad.Id
+                               where (d.CountryId == id && ad.Unusable != 0)
+                               select new
+                               {
+                                   d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                                   d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance 
+                               }).Count();
+
+            if (countDevice != 0)
             {
+
                 var res = from d in _context.Devices
                           join ad in _context.AmountDevices on d.Id equals ad.Id
-                          where (d.Price < price && d.MakerId == id)
+                          where (d.CountryId == id && ad.Unusable != 0)
                           select new
                           {
                               d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
                               d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
                           };
-                countDevice = (from d in _context.Devices
-                               join ad in _context.AmountDevices on d.Id equals ad.Id
-                               where (d.Price < price && d.MakerId == id)
-                               select new
-                               {
-                                   d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
-                                   d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
-                               }).Sum(ad => ad.AmountBye);
+                int amountDevice = (from d in _context.Devices
+                                   join ad in _context.AmountDevices on d.Id equals ad.Id
+                                   where (d.CountryId == id && ad.Unusable != 0)
+                                   select new
+                                   {
+                                       d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                                       d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                                   }).Sum(ad => ad.Unusable);
 
                 gridView.DataSource = await res.ToListAsync();
-
-                float part = countDevice * 100 / countDeviceAll;
-                return part;
+                return amountDevice;
             }
-
-
-        }
-
-        public async Task <int> AmountUnusableDeviceCountry (DataGridView gridView, int id)
-        {
-            var res = from d in _context.Devices
-                      join ad in _context.AmountDevices on d.Id equals ad.Id
-                      where (d.CountryId == id)
-                      select new
-                      {
-                          d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
-                          d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
-                      };
-            int countDevice = (from d in _context.Devices
-                           join ad in _context.AmountDevices on d.Id equals ad.Id
-                           where (d.CountryId == id)
-                           select new
-                           {
-                               d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
-                               d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
-                           }).Sum(ad => ad.Unusable);
-
-            gridView.DataSource = await res.ToListAsync();
-
-            return countDevice;
+            else
+            {
+                return 0;
+            }
         }
 
         public async Task<int> AmountUnusableDeviceMaker(DataGridView gridView, int id)
         {
-            var res = from d in _context.Devices
-                      join ad in _context.AmountDevices on d.Id equals ad.Id
-                      where (d.MakerId == id)
-                      select new
-                      {
-                          d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
-                          d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
-                      };
             int countDevice = (from d in _context.Devices
-                               join ad in _context.AmountDevices on d.Id equals ad.Id
-                               where (d.MakerId == id)
-                               select new
-                               {
-                                   d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
-                                   d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
-                               }).Sum(ad => ad.Unusable);
+                                join ad in _context.AmountDevices on d.Id equals ad.Id
+                                where (d.MakerId == id && ad.Unusable != 0)
+                                select new
+                                {
+                                     d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                                     d.Date_sale,  ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                                }).Count();
 
-            gridView.DataSource = await res.ToListAsync();
+            if (countDevice != 0)
+            {
+                var res = from d in _context.Devices
+                          join ad in _context.AmountDevices on d.Id equals ad.Id
+                          where (d.MakerId == id && ad.Unusable != 0)
+                          select new
+                          {
+                              d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                              d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                          };
+                int amountDevice = (from d in _context.Devices
+                                   join ad in _context.AmountDevices on d.Id equals ad.Id
+                                   where (d.MakerId == id && ad.Unusable != 0)
+                                   select new
+                                   {
+                                       d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                                       d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                                   }).Sum(ad => ad.Unusable);
 
-            return countDevice;
+                gridView.DataSource = await res.ToListAsync();
+                return countDevice;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public async Task<decimal> HiAverageMaker(DataGridView gridView, int id)
         {
-            decimal averagePrice = (from d in _context.Devices
-                               join ad in _context.AmountDevices on d.Id equals ad.Id
-                               where (d.MakerId == id)
-                               select new
-                               {
-                                   d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
-                                   d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
-                               }).Average(d=> d.Price);
+            int count = (from d in _context.Devices
+                                    join ad in _context.AmountDevices on d.Id equals ad.Id
+                                    where (d.MakerId == id)
+                                    select new
+                                    {
+                                        d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                                        d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                                    }).Count();
+            if (count != 0)
+            {
 
-            var res = from d in _context.Devices
-                      join ad in _context.AmountDevices on d.Id equals ad.Id
-                      where (d.MakerId == id && d.Price > averagePrice)
-                      select new
-                      {
-                          d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release, 
-                          d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
-                      };
-            
-            gridView.DataSource = await res.ToListAsync();
+                decimal averagePrice = (from d in _context.Devices
+                                        join ad in _context.AmountDevices on d.Id equals ad.Id
+                                        where (d.MakerId == id)
+                                        select new
+                                        {
+                                            d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                                            d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                                        }).Average(d => d.Price);
 
-            return averagePrice;
+                var res = from d in _context.Devices
+                          join ad in _context.AmountDevices on d.Id equals ad.Id
+                          where (d.MakerId == id && d.Price > averagePrice)
+                          select new
+                          {
+                              d.Id, d.TypeDevice, d.Maker, d.Country, d.Price, d.Weight, d.Date_release,
+                              d.Date_sale, ad.AmountBye, ad.AmountSale, ad.Unusable, ad.Balance
+                          };
+
+                gridView.DataSource = await res.ToListAsync();
+                return averagePrice;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

@@ -133,6 +133,7 @@ namespace CourseWork16.ServiceEdit
             this.Controls.Add(this.label1);
             this.Controls.Add(this.SaveChange_Button);
             this.Name = "EditAmountForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "EditAmountForm";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();

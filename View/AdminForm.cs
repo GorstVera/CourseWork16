@@ -16,7 +16,7 @@ namespace CourseWork16.View
     {
         AddUserForm addUserForm = new AddUserForm();
         DeviceService deviceService = new DeviceService();
-        TypeService typeService = new TypeService();
+        TypeService typeService =  TypeService.Instance;
         AmountDeviceService amountDeviceService = new AmountDeviceService();
         SaleDeviceForm saleDeviceForm;
         EditForm editForm = new EditForm();
@@ -26,32 +26,33 @@ namespace CourseWork16.View
         {
             InitializeComponent();
             this.Load += AdminForm_Load;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGridView1.CellDoubleClick += DataGridView1_CellDoubleClick;
         }
 
-        private void DataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private async void DataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridView1.CurrentCell.ColumnIndex == 1)
             {
-                deviceService.ShowAll(dataGridView1);
+                await deviceService.ShowAll(dataGridView1);
             }
             if (dataGridView1.CurrentCell.ColumnIndex == 2)
             {
-                deviceService.ShowAll(dataGridView1);
+                await deviceService.ShowAll(dataGridView1);
             }
             if (dataGridView1.CurrentCell.ColumnIndex == 3)
             {
-                deviceService.ShowAll(dataGridView1);
+                await deviceService .ShowAll(dataGridView1);
             }
         }
 
-        private void AdminForm_Load(object sender, EventArgs e)
+        private async void AdminForm_Load(object sender, EventArgs e)
         {
-            deviceService.ShowAll(dataGridView1);    
+            await deviceService .ShowAll(dataGridView1);    
         }
-        private void ShowAll_Button_Click(object sender, EventArgs e)
+        private async void ShowAll_Button_Click(object sender, EventArgs e)
         {
-            deviceService.ShowAll(dataGridView1);
+            await deviceService .ShowAll(dataGridView1);
         }
 
         private void AddNewDevice_Button_Click(object sender, EventArgs e)
@@ -68,7 +69,7 @@ namespace CourseWork16.View
             allUsers.ShowDialog();
         }
 
-        private void SaleDevice_Button_Click(object sender, EventArgs e)
+        private async void SaleDevice_Button_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows == null)
             {
@@ -76,15 +77,19 @@ namespace CourseWork16.View
                 return;
             }
 
+            if (dataGridView1.RowCount == 0)
+            {
+                MessageBox.Show("Заполните таблицу");
+                return;
+            }
             string id = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
             int tempId = 0;
             Int32.TryParse(id, out tempId);
-            MessageBox.Show(tempId.ToString());
             saleDeviceForm = new SaleDeviceForm(tempId);
             if (saleDeviceForm.ShowDialog() == DialogResult.OK)
             {
                 label1.Text = "Товар успешно реализован";
-                deviceService.ShowAll(dataGridView1);
+                await deviceService.ShowAll(dataGridView1);
             }
 
         }
@@ -94,6 +99,11 @@ namespace CourseWork16.View
             if (dataGridView1.SelectedRows == null)
             {
                 MessageBox.Show("Выберите предмет");
+                return;
+            }
+            if (dataGridView1.RowCount == 0)
+            {
+                MessageBox.Show("Заполните таблицу");
                 return;
             }
             string id = dataGridView1[0, dataGridView1.CurrentRow.Index].Value.ToString();
@@ -111,7 +121,7 @@ namespace CourseWork16.View
             if (res1 == true && res2 == true)
             {
                 label1.Text = "Удаление выполнено успешно";
-                deviceService.ShowAll(dataGridView1);
+                await deviceService.ShowAll(dataGridView1);
             }
             else
             {
@@ -119,11 +129,12 @@ namespace CourseWork16.View
             }          
         }
 
-        private void Edit_Button_Click(object sender, EventArgs e)
+        private async void Edit_Button_Click(object sender, EventArgs e)
         {
             if (editForm.ShowDialog() == DialogResult.OK)
             {
                 MessageBox.Show("Редактирование выполнено успешно");
+                await deviceService.ShowAll(dataGridView1);
             }
         }
 

@@ -34,6 +34,9 @@ namespace CourseWork16.View
             this.label1 = new System.Windows.Forms.Label();
             this.Choice_Button = new System.Windows.Forms.Button();
             this.SaveChange_Button = new System.Windows.Forms.Button();
+            this.Delete_Button = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -80,7 +83,7 @@ namespace CourseWork16.View
             // 
             // SaveChange_Button
             // 
-            this.SaveChange_Button.Location = new System.Drawing.Point(1144, 514);
+            this.SaveChange_Button.Location = new System.Drawing.Point(1144, 555);
             this.SaveChange_Button.Name = "SaveChange_Button";
             this.SaveChange_Button.Size = new System.Drawing.Size(241, 74);
             this.SaveChange_Button.TabIndex = 4;
@@ -88,11 +91,43 @@ namespace CourseWork16.View
             this.SaveChange_Button.UseVisualStyleBackColor = true;
             this.SaveChange_Button.Click += new System.EventHandler(this.SaveChange_Button_Click);
             // 
+            // Delete_Button
+            // 
+            this.Delete_Button.Location = new System.Drawing.Point(1178, 499);
+            this.Delete_Button.Name = "Delete_Button";
+            this.Delete_Button.Size = new System.Drawing.Size(174, 40);
+            this.Delete_Button.TabIndex = 5;
+            this.Delete_Button.Text = "Удалить";
+            this.Delete_Button.UseVisualStyleBackColor = true;
+            this.Delete_Button.Click += new System.EventHandler(this.Delete_Button_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(25, 575);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(588, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "*Для редактирования данных по количеству товара используйте двойной щелчок мышью " +
+    "по необхдимому товару";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(25, 607);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(391, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "*В этой \"Продукция\" можно изменять Price, Date_release, Date_sale, Weight";
+            // 
             // EditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1397, 668);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.Delete_Button);
             this.Controls.Add(this.SaveChange_Button);
             this.Controls.Add(this.Choice_Button);
             this.Controls.Add(this.label1);
@@ -113,5 +148,8 @@ namespace CourseWork16.View
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Choice_Button;
         private System.Windows.Forms.Button SaveChange_Button;
+        private System.Windows.Forms.Button Delete_Button;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }

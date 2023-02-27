@@ -14,10 +14,6 @@ namespace CourseWork16.Model
 
         public ICollection<Device> Devices { get; set; } = new List<Device>();
 
-        public static explicit operator Maker(Task<IDevice> v)
-        {
-            throw new NotImplementedException();
-        }
         public override string ToString()
         {
             return $"{NameMaker}";

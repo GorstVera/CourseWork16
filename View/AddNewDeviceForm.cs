@@ -48,13 +48,7 @@ namespace CourseWork16.View
 
         private async void AddNewDevice_Button_Click(object sender, EventArgs e)
         {
-            
-
-            //TypeDevice tempType =  await typeService.GetItem(comboBox1.Text);
-            //if(tempType == null)
-            //{
-            //    tempType = (TypeDevice) await typeService.AddItem(comboBox1.Text);  
-            //}
+           
             Maker tempMaker = await makerService.GetItem(comboBox2.Text);
             if (tempMaker == null)
             {

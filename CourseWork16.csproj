@@ -70,8 +70,6 @@
     <Compile Include="ServiceDevice\AmountDeviceService.cs" />
     <Compile Include="ServiceDevice\CountryService.cs" />
     <Compile Include="ServiceDevice\DeviceService.cs" />
-    <Compile Include="ServiceDevice\IDevice.cs" />
-    <Compile Include="ServiceDevice\IServiceDevice.cs" />
     <Compile Include="ServiceDevice\MakerService.cs" />
     <Compile Include="ServiceDevice\TypeService.cs" />
     <Compile Include="ServiceEdit\EditAmountForm.cs">

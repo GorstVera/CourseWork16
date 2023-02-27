@@ -30,23 +30,33 @@ namespace CourseWork16.ServiceDevice
             return resM.Id;
         }
 
-        public Task<IDevice> DeleteItem()
+        public async Task<bool> DeleteMaker(int id)
         {
-            throw new NotImplementedException();
+            Maker temp = await GetItem(id);
+            _context.Makers.Remove(temp);
+            await _context.SaveChangesAsync();
+            var res = await GetItem(id);
+            if (res == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public async Task<Maker> GetItem(string name)
         {
             return  await _context.Makers.FirstOrDefaultAsync(m => m.NameMaker == name);
         }
+        public async Task<Maker> GetItem(int id)
+        {
+            return await _context.Makers.FirstOrDefaultAsync(tp => tp.Id == id);
+        }
         public async Task<List<Maker>> GetAll()
         {
             return  await _context.Makers.ToListAsync();
-        }
-
-        public Task<IDevice> UpdateItem()
-        {
-            throw new NotImplementedException();
         }
     }
 }

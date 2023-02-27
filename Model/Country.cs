@@ -13,10 +13,6 @@ namespace CourseWork16.Model
         public string NameCountry { get; set; }
         public ICollection<Device> Devices { get; set; } = new List<Device>();
 
-        public static explicit operator Country(Task<IDevice> v)
-        {
-            throw new NotImplementedException();
-        }
         public override string ToString()
         {
             return $"{NameCountry}";

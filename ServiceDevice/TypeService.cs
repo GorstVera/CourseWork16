@@ -37,9 +37,20 @@ namespace CourseWork16.ServiceDevice
             return  resTD.Id;
         }
 
-        public Task<IDevice> DeleteItem()
+        public async Task<bool> DeleteTypeDevice(int id)
         {
-            throw new NotImplementedException();
+            TypeDevice temp = await GetItem(id);
+            _context.TypeDevices.Remove(temp);
+            await _context.SaveChangesAsync();
+            var res = await GetItem(id);
+            if (res == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public async  Task<List<TypeDevice>> GetAll()
@@ -52,11 +63,10 @@ namespace CourseWork16.ServiceDevice
             return  await _context.TypeDevices.FirstOrDefaultAsync(tp => tp.NameType == name);
         }
 
-        public Task<IDevice> UpdateItem()
+        public async Task<TypeDevice> GetItem(int id)
         {
-            throw new NotImplementedException();
+            return await _context.TypeDevices.FirstOrDefaultAsync(tp => tp.Id == id);
         }
 
-     
     }
 }

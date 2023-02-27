@@ -15,7 +15,7 @@ namespace CourseWork16.View
     public partial class ManagerForm : Form
     {
         DeviceService deviceService = new DeviceService();
-        TypeService typeService = new TypeService();
+        TypeService typeService = TypeService.Instance;
         MakerService makerService = new MakerService();
         CountryService countryService = new CountryService();
 
@@ -23,7 +23,7 @@ namespace CourseWork16.View
         {
             InitializeComponent();
             this.Load += ManagerForm_Load;
-            dataGridView1.AutoResizeColumns();
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
 
         private async void ManagerForm_Load(object sender, EventArgs e)
@@ -78,7 +78,7 @@ namespace CourseWork16.View
                 return;
             }
             int resM = await makerService.GetIdMaker(comboBox2.Text);
-            deviceService.ShowMaker(dataGridView1, resM);
+            await deviceService.ShowMaker(dataGridView1, resM);
         }
 
         private async void FindRelease_Button_Click(object sender, EventArgs e)
@@ -120,9 +120,9 @@ namespace CourseWork16.View
             await deviceService.ExpenciveDevice(dataGridView1, comboBox1.Text);
         }
 
-        private void Cheapest_Button_Click(object sender, EventArgs e)
+        private async void Cheapest_Button_Click(object sender, EventArgs e)
         {
-            deviceService.CheapDevice(dataGridView1, comboBox1.Text);
+            await deviceService.CheapDevice(dataGridView1, comboBox1.Text);
         }
 
         private async void Average_Button_Click(object sender, EventArgs e)
@@ -148,18 +148,32 @@ namespace CourseWork16.View
 
         private async void PriceLessThan_Button_Click(object sender, EventArgs e)
         {
-            float res = 0;
-            if (comboBox4.SelectedIndex ==0)
+            if (comboBox4.SelectedIndex ==-1)
             {
-                res = await deviceService.PartPriceDevice(dataGridView1, comboBox4.SelectedIndex, numericUpDown5.Value);
-                label9.Text = $"Доля товаров со стоимостью меньше {numericUpDown5.Value} в категории {comboBox4.Text} составляет {res} % ";
+                MessageBox.Show("Выберите категорию");
+                return;
+            }
+            if (numericUpDown5.Value == 0)
+            {
+                MessageBox.Show("Стоимость должна быть больше 0");
+                return;
             }
             else
             {
-                int id = await makerService.GetIdMaker(comboBox4.Text);
-                res = await deviceService.PartPriceDevice(dataGridView1, id, numericUpDown5.Value);
-                label9.Text = $"Доля товаров со стоимостью меньше {numericUpDown5.Value} в категории {comboBox4.Text} составляет {res} % ";
+                float res = 0;
+                if (comboBox4.SelectedIndex == 0)
+                {
+                    res = await deviceService.PartPriceDevice(dataGridView1, comboBox4.SelectedIndex, numericUpDown5.Value);
+                    label9.Text = $"Доля товаров со стоимостью меньше {numericUpDown5.Value} в категории {comboBox4.Text} составляет {res} % ";
+                }
+                else
+                {
+                    int id = await makerService.GetIdMaker(comboBox4.Text);
+                    res = await deviceService.PartPriceDevice(dataGridView1, id, numericUpDown5.Value);
+                    label9.Text = $"Доля товаров со стоимостью меньше {numericUpDown5.Value} в категории {comboBox4.Text} составляет {res} % ";
+                }
             }
+           
             
         }
 

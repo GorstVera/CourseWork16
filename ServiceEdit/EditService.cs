@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+//этот класс я решила реализовать так, чтобы показать что есть возможность изменять данные и другим способом.
+
 namespace CourseWork16.ServiceUser
 {
     public class EditService
@@ -17,7 +19,6 @@ namespace CourseWork16.ServiceUser
         DataSet data = new DataSet();
         SqlDataAdapter adapter1;
         SqlDataAdapter adapter2;
-        SqlDataAdapter adapter;
         DataGridView dataGridView;
         DataViewManager manager;
 
@@ -25,11 +26,12 @@ namespace CourseWork16.ServiceUser
         {
             this.dataGridView = dataGridView;
             connection.ConnectionString = @"Data Source=1-ПК\SQLEXPRESS; Initial catalog = CourseWork16; Integrated Security = true;";
-            connection.Open();
+            //connection.Open();
         }
 
         public void FillTables(int number)
         {
+            connection.Open();
             string command1;
             string command2;
             command1 = "select * from TypeDevices; select * from Makers; select * from Countries;";
@@ -81,6 +83,7 @@ namespace CourseWork16.ServiceUser
 
             adapter1.UpdateCommand = update;
             adapter1.Update(data1.Tables[0]);
+            
         }
         public void SaveChangeMaker()
         {
@@ -145,32 +148,8 @@ namespace CourseWork16.ServiceUser
             update.Parameters["@pWeight"].SourceColumn = "Weight";
             update.Parameters["@pId"].SourceColumn = "Id";
             adapter2.UpdateCommand = update;
-            /*
-            temp = "Update AmountDevices set AmountBye=@pAmountBye, AmountSale=@pAmountSale, Unusable=@pUnusable, Balance=@pBalance where Id=@pId";
-            update = new SqlCommand(temp, connection);
-
-            update.Parameters.Add(new SqlParameter("@pAmountBye", SqlDbType.Int));
-            update.Parameters.Add(new SqlParameter("@pAmountSale", SqlDbType.Int));
-            update.Parameters.Add(new SqlParameter("@pUnusable", SqlDbType.Int));
-            update.Parameters.Add(new SqlParameter("@pBalance", SqlDbType.Int));
-            update.Parameters.Add(new SqlParameter("@pId", SqlDbType.Int));
-
-            update.Parameters["@@pAmountBye"].SourceVersion = DataRowVersion.Current;
-            update.Parameters["@pAmountSale"].SourceVersion = DataRowVersion.Current;
-            update.Parameters["@Unusable"].SourceVersion = DataRowVersion.Current;
-            update.Parameters["@pBalance"].SourceVersion = DataRowVersion.Current;
-            update.Parameters["@pId"].SourceVersion = DataRowVersion.Original;
-
-            update.Parameters["@p@pAmountBye"].SourceColumn = "AmountBye";
-            update.Parameters["@pAmountSale"].SourceColumn = "AmountSale";
-            update.Parameters["@pUnusable"].SourceColumn = "Unusable";
-            update.Parameters["@pBalance"].SourceColumn = "Balance";
-            update.Parameters["@pId"].SourceColumn = "Id";
-            adapter2.UpdateCommand = update;
-            */
+            
             adapter2.Update(data2.Tables[0]);
         }
-
-
     }
 }
